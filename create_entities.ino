@@ -14,8 +14,8 @@ bool create_entities()
   RCCHECK(rclc_executor_init(&executor, &support.context, 1, &allocator));
   RCCHECK(rclc_executor_add_timer(&executor, &timer));
   /*End ROS Enttities*/
-
-  /*Creates all IMU publishers*/
+  
+  /*Creates all IMU publishers
   RCCHECK(rclc_publisher_init_best_effort(
       &publisher0,
       &node,
@@ -45,7 +45,8 @@ bool create_entities()
       &node,
       ROSIDL_GET_MSG_TYPE_SUPPORT(sensor_msgs, msg, Imu),
       "micro_ros_arduino_imu4_publisher"));
-  /*End IMU Publishers*/
+  End IMU Publishers */
+
   
   return true;
 }

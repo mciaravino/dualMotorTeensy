@@ -7,15 +7,15 @@ void loopODrive() {
   
   float phase = t * (TWO_PI / SINE_PERIOD);
 
-  odrv0.setPosition(
+  odrv16.setPosition(
     sin(phase), // position
     cos(phase) * (TWO_PI / SINE_PERIOD) // velocity feedforward (optional)
   );
 
   // print position and velocity for Serial Plotter
-  if (odrv0_user_data.received_feedback) {
-    Get_Encoder_Estimates_msg_t feedback = odrv0_user_data.last_feedback;
-    odrv0_user_data.received_feedback = false;
+  if (odrv16_user_data.received_feedback) {
+    Get_Encoder_Estimates_msg_t feedback = odrv16_user_data.last_feedback;
+    odrv16_user_data.received_feedback = false;
     Serial.print("odrv0-pos:");
     Serial.print(feedback.Pos_Estimate);
     Serial.print(",");

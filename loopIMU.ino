@@ -1,5 +1,6 @@
 void loopIMU()
 {
+  /*
   tcaselect(0);  
   imu0.dmpGetCurrentFIFOPacket(fifoBuffer);
   imu0.dmpGetQuaternion(&q, fifoBuffer);
@@ -95,5 +96,6 @@ void loopIMU()
     msg4.linear_acceleration.z = (float)gg.z;
     msg4.header.stamp.sec = millis() / 1000;
     rcl_publish(&publisher4, &msg4, NULL);
+    */
   
 }

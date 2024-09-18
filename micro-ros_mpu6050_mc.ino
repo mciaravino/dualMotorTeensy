@@ -36,6 +36,7 @@ rcl_allocator_t allocator;
 rcl_node_t node;
 rcl_timer_t timer; //If we want to run sensor updates at different intervals, we create more than one timer
 
+/*
 //Now we created the publisher, mpu, and msg objects, numbered 0 to n-1, where n is the number of IMUs we have connected
 rcl_publisher_t publisher0;
 rcl_publisher_t publisher1;
@@ -71,6 +72,7 @@ VectorInt16 ggWorld; // [x, y, z]            world-frame accel sensor measuremen
 VectorFloat gravity; // [x, y, z]            gravity vector
 float euler[3];      // [psi, theta, phi]    Euler angle container
 float ypr[3];        // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
+*/
 
 #define LED_PIN 13 //This is for our error loop
 
@@ -97,15 +99,19 @@ enum states
 #define CAN_BAUDRATE 250000
 
 // ODrive node_id for odrv0
-#define ODRV0_NODE_ID 0
+#define ODRV_NODE_ID_STARBOARD 19 //Becuase S is the 19th letter of the alphabet
+#define ODRV_NODE_ID_PORT 16 //Because P is the 16th letter of the alphabet
 
 
 //This starts the CanBus interface
 FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> can_intf;
 
 // Instantiate ODrive objects
-ODriveCAN odrv0(wrap_can_intf(can_intf), ODRV0_NODE_ID); // Standard CAN message ID
-ODriveCAN* odrives[] = {&odrv0}; // Make sure all ODriveCAN instances are accounted for here
+ODriveCAN odrv19(wrap_can_intf(can_intf), ODRV_NODE_ID_STARBOARD); // Standard CAN message ID
+ODriveCAN odrv16(wrap_can_intf(can_intf), ODRV_NODE_ID_PORT); // Standard CAN message ID
+
+
+ODriveCAN* odrives[] = {&odrv16, &odrv19}; // Make sure all ODriveCAN instances are accounted for here
 
 // Keep some application-specific user data for every ODrive.
 struct ODriveUserData {
@@ -115,7 +121,8 @@ struct ODriveUserData {
   bool received_feedback = false;
 };
 
-ODriveUserData odrv0_user_data;
+ODriveUserData odrv16_user_data;
+ODriveUserData odrv19_user_data;
 
 void timer_callback(rcl_timer_t * timer, int64_t last_call_time)
 //This is essentially our loop function
@@ -126,7 +133,7 @@ void timer_callback(rcl_timer_t * timer, int64_t last_call_time)
     if (timer != NULL) 
     {
     /*This is effectively our loop() function*/
-    loopIMU();
+    //loopIMU();
     loopODrive();
     /*End is effectively loop*/
     }
@@ -150,7 +157,7 @@ void setup()
   pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, HIGH);  
 
-  setupIMU();
+  //setupIMU();
   setupCan();
   setupODrive();
   

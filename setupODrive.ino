@@ -2,11 +2,14 @@ void setupODrive() {
 Serial.println("Starting ODriveCAN demo");
 
   // Register callbacks for the heartbeat and encoder feedback messages
-  odrv0.onFeedback(onFeedback, &odrv0_user_data);
-  odrv0.onStatus(onHeartbeat, &odrv0_user_data);
+  odrv16.onFeedback(onFeedback, &odrv16_user_data);
+  odrv16.onStatus(onHeartbeat, &odrv16_user_data);
 
-  // Configure and initialize the CAN bus interface. This function depends on
-  // your hardware and the CAN stack that you're using.
+  odrv19.onFeedback(onFeedback, &odrv19_user_data);
+  odrv19.onStatus(onHeartbeat, &odrv19_user_data);
+
+  //These are optional segments you can keep in for troubleshooting
+  /*
   if (!setupCan()) {
     Serial.println("CAN failed to initialize: reset required");
     while (true); // spin indefinitely
@@ -32,12 +35,14 @@ Serial.println("Starting ODriveCAN demo");
   Serial.println(vbus.Bus_Voltage);
   Serial.print("DC current [A]: ");
   Serial.println(vbus.Bus_Current);
-
-  Serial.println("Enabling closed loop control...");
-  while (odrv0_user_data.last_heartbeat.Axis_State != ODriveAxisState::AXIS_STATE_CLOSED_LOOP_CONTROL) {
-    odrv0.clearErrors();
+  */
+  Serial.println("Enabling closed loop control on odrv16...");
+  while (odrv16_user_data.last_heartbeat.Axis_State != ODriveAxisState::AXIS_STATE_CLOSED_LOOP_CONTROL or odrv19_user_data.last_heartbeat.Axis_State != ODriveAxisState::AXIS_STATE_CLOSED_LOOP_CONTROL){
+    odrv16.clearErrors();
+    odrv19.clearErrors();
     delay(1);
-    odrv0.setState(ODriveAxisState::AXIS_STATE_CLOSED_LOOP_CONTROL);
+    odrv16.setState(ODriveAxisState::AXIS_STATE_CLOSED_LOOP_CONTROL);
+    odrv19.setState(ODriveAxisState::AXIS_STATE_CLOSED_LOOP_CONTROL);
 
     // Pump events for 150ms. This delay is needed for two reasons;
     // 1. If there is an error condition, such as missing DC power, the ODrive might
@@ -50,6 +55,7 @@ Serial.println("Starting ODriveCAN demo");
       delay(10);
       pumpEvents(can_intf);
     }
+    break;
   }
 
   Serial.println("ODrive running!");

@@ -1,5 +1,6 @@
 void setupIMU()
 {
+  /*
   //Set all msg headers
   msg0.header.frame_id.data = "imu0_header";
   msg1.header.frame_id.data = "imu1_header";
@@ -57,4 +58,5 @@ void setupIMU()
   imu4.setXAccelOffset(-3699);
   imu4.setYAccelOffset(-2519);
   imu4.setZAccelOffset(1391);
+  */
 }
